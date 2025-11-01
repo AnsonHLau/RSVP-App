@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -56,53 +57,48 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var words = ["Don't", "stop", "no", "don't", "stop", "'til", "finish"];
   int _index = 0;
+  int _wpm = 300;
+  Timer? _timer;
+  bool get _isRunning => _timer?.isActive == true;
 
   void _incrementIndex() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _index = (_index < words.length-1) ? _index + 1 : _index;
     });
   }
 
+  Duration get _speed {
+    return Duration(milliseconds: (60000 / _wpm).round());
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(_speed, (timer) {_incrementIndex();});
+    setState(() {});
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    setState(() {}); 
+  }
+
+  void _toggleTimer() {
+    if (_isRunning) {
+      _stopTimer();
+    } else {
+      _startTimer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -112,10 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementIndex,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _toggleTimer,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        label: Text(_isRunning ? 'Pause' : 'Play'),
+        icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
