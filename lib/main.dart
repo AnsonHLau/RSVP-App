@@ -88,6 +88,15 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       _startTimer();
     }
+  void _resetIndex() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _index = 0;
+    });
   }
 
   @override
@@ -105,14 +114,18 @@ class _MyHomePageState extends State<MyHomePage> {
               words[_index],
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            FloatingActionButton.extended(
+              onPressed: _toggleTimer,
+              tooltip: 'Increment',
+              label: Text(_isRunning ? 'Pause' : 'Play'),
+              icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+      ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _toggleTimer,
-        tooltip: 'Increment',
-        label: Text(_isRunning ? 'Pause' : 'Play'),
-        icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+      ), 
+      floatingActionButton: FloatingActionButton(
+        onPressed: _resetIndex,
+        tooltip: 'Reset',
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
