@@ -55,9 +55,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var words = ["Don't", "stop", "no", "don't", "stop", "'til", "finish"];
+    var words = [
+    "Never", "gonna", "give", "you", "up,",
+    "never", "gonna", "let", "you", "down,",
+    "never", "gonna", "run", "around", "and", "desert", "you.",
+    "Never", "gonna", "make", "you", "cry,",
+    "never", "gonna", "say", "goodbye,",
+    "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
+  ];
   int _index = 0;
-  int _wpm = 300;
+  int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
@@ -88,13 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       _startTimer();
     }
+  }
+
   void _resetIndex() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _index = 0;
     });
   }
@@ -106,27 +110,35 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              words[_index],
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            FloatingActionButton.extended(
-              onPressed: _toggleTimer,
-              tooltip: 'Increment',
-              label: Text(_isRunning ? 'Pause' : 'Play'),
-              icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
-      ),
-          ],
+      body: SafeArea(
+        child: Center(
+          // Keep the content tightly wrapped and centered
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                words[_index],
+                style: Theme.of(context).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              // Play Pause Button
+              const SizedBox(height: 32), 
+              FloatingActionButton.extended(
+                onPressed: _toggleTimer,
+                tooltip: 'Play/Pause',
+                label: Text(_isRunning ? 'Pause' : 'Play'),
+                icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+              ),
+            ],
+          ),
         ),
-      ), 
+      ),
+      // Reset Button
       floatingActionButton: FloatingActionButton(
         onPressed: _resetIndex,
         tooltip: 'Reset',
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: const Icon(Icons.restart_alt),
+      ),
     );
   }
 }
