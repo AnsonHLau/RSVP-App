@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 20, 80, 220)),
       ),
       home: const MyHomePage(title: 'RSVP Reader'),
     );
@@ -118,11 +118,11 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Text(
                 words[_index],
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               // Play Pause Button
-              const SizedBox(height: 32), 
+              const SizedBox(height: 64), 
               FloatingActionButton.extended(
                 onPressed: _toggleTimer,
                 tooltip: 'Play/Pause',
