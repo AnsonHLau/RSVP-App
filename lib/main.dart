@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
     "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
   ];
   int _index = 0;
-  int _wpm = 240;
+  final int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
@@ -102,6 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+      
+
       body: Stack(
         children: [
           // Main content
@@ -115,6 +117,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter text',
+                     
+                    ),
+                    onChanged: (text){
+                      //Setting the display text arrray into the input text
+                      words = text.split(' '); 
+                      _resetIndex();
+                    } 
+                  ),
+              
                   const SizedBox(height: 64),
                   FloatingActionButton.extended(
                     onPressed: _toggleTimer,
