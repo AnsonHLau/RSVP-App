@@ -90,40 +90,83 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: SafeArea(
-        child: Center(
-          // Keep the content tightly wrapped and centered
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                words[_index],
-                style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          // Main content
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    words[_index],
+                    style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 64),
+                  FloatingActionButton.extended(
+                    onPressed: _toggleTimer,
+                    tooltip: 'Play/Pause',
+                    label: Text(_isRunning ? 'Pause' : 'Play'),
+                    icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+                  ),
+                ],
               ),
-              // Play Pause Button
-              const SizedBox(height: 64), 
-              FloatingActionButton.extended(
-                onPressed: _toggleTimer,
-                tooltip: 'Play/Pause',
-                label: Text(_isRunning ? 'Pause' : 'Play'),
-                icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
-              ),
-            ],
+            ),
           ),
-        ),
+
+          // Settings button 
+          Positioned(
+            left: 16,
+            bottom: 16,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsPage()),
+                );
+              },
+              tooltip: 'Settings',
+              child: const Icon(Icons.settings),
+            ),
+          ),
+        ],
       ),
-      // Reset Button
+
+      // Reset button (default FAB position)
       floatingActionButton: FloatingActionButton(
         onPressed: _resetIndex,
         tooltip: 'Reset',
         child: const Icon(Icons.restart_alt),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Settings'),
+      ),
+      body: const Center(
+        child: Text('Settings go here'),
       ),
     );
   }
