@@ -88,6 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
       _index = 0;
     });
   }
+  
+
+  void _forcePausePlayback(){
+    _stopTimer(); 
+
+  }
 
   @override
   void dispose() {
@@ -127,9 +133,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       //Setting the display text arrray into the input text
                       words = text.split(' '); 
                       _resetIndex();
+                      _forcePausePlayback();
+                    
                     } 
                   ),
               
+                  //Play/Pause Button
                   const SizedBox(height: 64),
                   FloatingActionButton.extended(
                     onPressed: _toggleTimer,
