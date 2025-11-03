@@ -40,6 +40,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+int _index = 0;
+
 class _MyHomePageState extends State<MyHomePage> {
     var words = [
     "Never", "gonna", "give", "you", "up,",
@@ -49,14 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
     "never", "gonna", "say", "goodbye,",
     "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
   ];
-  int _index = 0;
+ 
   final int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
   void _incrementIndex() {
     setState(() {
-      _index = (_index < words.length-1) ? _index + 1 : _index;
+      _index = (_index < readingWords.length-1) ? _index + 1 : _index;
     });
   }
 
@@ -178,6 +180,7 @@ class _SettingsPageState extends State<SettingsPage>{
 
   void _submitWords(){
     readingWords = inputWords; 
+    _index = 0;
   }
   @override
   Widget build(BuildContext context) {
