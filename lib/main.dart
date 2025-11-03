@@ -43,13 +43,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-    var words = [
-    "Never", "gonna", "give", "you", "up,",
-    "never", "gonna", "let", "you", "down,",
-    "never", "gonna", "run", "around", "and", "desert", "you.",
-    "Never", "gonna", "make", "you", "cry,",
-    "never", "gonna", "say", "goodbye,",
-    "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
+  var words = [
+    "Never",
+    "gonna",
+    "give",
+    "you",
+    "up,",
+    "never",
+    "gonna",
+    "let",
+    "you",
+    "down,",
+    "never",
+    "gonna",
+    "run",
+    "around",
+    "and",
+    "desert",
+    "you.",
+    "Never",
+    "gonna",
+    "make",
+    "you",
+    "cry,",
+    "never",
+    "gonna",
+    "say",
+    "goodbye,",
+    "never",
+    "gonna",
+    "tell",
+    "a",
+    "lie",
+    "and",
+    "hurt",
+    "you.",
   ];
   int _index = 0;
   int _wpm = 240;
@@ -128,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    words[_index],
+                    readingWords[_index],
                     style: const TextStyle(
                       fontSize: 52,
                       fontWeight: FontWeight.w600,
@@ -214,8 +242,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+var inputWords = [""];
+var readingWords = [""];
+
+class _SettingsPageState extends State<SettingsPage> {
+  void _submitWords() {
+    readingWords = inputWords;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +257,34 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Settings'),
       ),
-      body: const Center(child: Text('Settings go here')),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter text',
+              ),
+              onChanged: (text) {
+                //Setting the display text arrray into the input text
+                inputWords = text.split(' ');
+              },
+            ),
+            FloatingActionButton(
+              onPressed: _submitWords,
+              tooltip: "Submit",
+              child: const Icon(Icons.air),
+            ),
+          ],
+        ),
+      ),
     );
   }
+}
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
 }
