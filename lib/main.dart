@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'RSVP Reader',
       theme: ThemeData(
         // This is the theme of your application.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 20, 80, 220)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 20, 80, 220),
+        ),
       ),
       home: const MyHomePage(title: 'RSVP Reader'),
     );
@@ -43,16 +45,44 @@ class MyHomePage extends StatefulWidget {
 int _index = 0;
 
 class _MyHomePageState extends State<MyHomePage> {
-    var words = [
-    "Never", "gonna", "give", "you", "up,",
-    "never", "gonna", "let", "you", "down,",
-    "never", "gonna", "run", "around", "and", "desert", "you.",
-    "Never", "gonna", "make", "you", "cry,",
-    "never", "gonna", "say", "goodbye,",
-    "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
+  var words = [
+    "Never",
+    "gonna",
+    "give",
+    "you",
+    "up,",
+    "never",
+    "gonna",
+    "let",
+    "you",
+    "down,",
+    "never",
+    "gonna",
+    "run",
+    "around",
+    "and",
+    "desert",
+    "you.",
+    "Never",
+    "gonna",
+    "make",
+    "you",
+    "cry,",
+    "never",
+    "gonna",
+    "say",
+    "goodbye,",
+    "never",
+    "gonna",
+    "tell",
+    "a",
+    "lie",
+    "and",
+    "hurt",
+    "you.",
   ];
- 
-  final int _wpm = 240;
+  
+  int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
@@ -68,13 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer.periodic(_speed, (timer) {_incrementIndex();});
+    _timer = Timer.periodic(_speed, (timer) {
+      _incrementIndex();
+    });
     setState(() {});
   }
 
   void _stopTimer() {
     _timer?.cancel();
-    setState(() {}); 
+    setState(() {});
   }
 
   void _toggleTimer() {
@@ -84,18 +116,24 @@ class _MyHomePageState extends State<MyHomePage> {
       _startTimer();
     }
   }
-  
 
   void _resetIndex() {
     setState(() {
       _index = 0;
     });
   }
-  
 
-  void _forcePausePlayback(){
-    _stopTimer(); 
+  void _forcePausePlayback() {
+    _stopTimer();
+  }
 
+  void _updateWpm(int newWpm) {
+    setState(() {
+      _wpm = newWpm.clamp(100, 800);
+    });
+    if (_isRunning) {
+      _startTimer();
+    }
   }
 
   @override
@@ -104,15 +142,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      
-
       body: Stack(
         children: [
           // Main content
@@ -123,11 +159,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   Text(
                     readingWords[_index],
-                    style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 52,
+                      fontWeight: FontWeight.w600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  
-              
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter text',
+                    ),
+                    onChanged: (text) {
+                      //Setting the display text arrray into the input text
+                      words = text.split(' ');
+                      _resetIndex();
+                      _forcePausePlayback();
+                    },
+                  ),
+
+                  //Wpm Slider
+                  const SizedBox(height: 32),
+                  Text(
+                    'Speed: $_wpm WPM',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      tickMarkShape: SliderTickMarkShape.noTickMark,
+                      activeTickMarkColor: Colors.transparent,
+                      inactiveTickMarkColor: Colors.transparent,
+                    ),
+                    child: Slider.adaptive(
+                      min: 100,
+                      max: 800,
+                      divisions: 28, // keeps discrete steps
+                      value: _wpm.toDouble(),
+                      label: '$_wpm WPM',
+                      onChanged: (v) => _updateWpm(v.round()),
+                    ),
+                  ),
+
                   //Play/Pause Button
                   const SizedBox(height: 64),
                   FloatingActionButton.extended(
@@ -142,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-          // Settings button 
+          // Settings button
           Positioned(
             left: 16,
             bottom: 16,
@@ -172,8 +244,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-var inputWords = [""]; 
-var readingWords = [""]; 
+var inputWords = [""];
+var readingWords = [""];
 
 class _SettingsPageState extends State<SettingsPage>{
 
@@ -182,47 +254,42 @@ class _SettingsPageState extends State<SettingsPage>{
     readingWords = inputWords; 
     _index = 0;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title:const Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-
             TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter text',
-                     
-                    ),
-                    onChanged: (text){
-                      //Setting the display text arrray into the input text
-                       inputWords = text.split(' '); 
-                      
-                    
-                    } 
-                  ), 
-            FloatingActionButton(onPressed: _submitWords,
-            tooltip: "Submit",
-            child: const Icon(Icons.air))
-            ],
-        )
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter text',
+              ),
+              onChanged: (text) {
+                //Setting the display text arrray into the input text
+                inputWords = text.split(' ');
+              },
+            ),
+            FloatingActionButton(
+              onPressed: _submitWords,
+              tooltip: "Submit",
+              child: const Icon(Icons.air),
+            ),
+          ],
+        ),
       ),
-      
     );
   }
 }
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-
   @override
   State<SettingsPage> createState() => _SettingsPageState();
-
-  
-  
 }
