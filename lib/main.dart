@@ -129,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   //Play/Pause Button
                   const SizedBox(height: 64),
                   FloatingActionButton.extended(
+                    heroTag: "play_pause",
                     onPressed: _toggleTimer,
                     tooltip: 'Play/Pause',
                     label: Text(_isRunning ? 'Pause' : 'Play'),
@@ -144,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
             left: 16,
             bottom: 16,
             child: FloatingActionButton(
+              heroTag: "settings",
               onPressed: () {
                 Navigator.push(
                   context,
@@ -159,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // Reset button (default FAB position)
       floatingActionButton: FloatingActionButton(
+        heroTag: "reset",
         onPressed: _resetIndex,
         tooltip: 'Reset',
         child: const Icon(Icons.restart_alt),
