@@ -170,12 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       border: OutlineInputBorder(),
                       hintText: 'Enter text',
                     ),
-                    onChanged: (text) {
-                      //Setting the display text arrray into the input text
-                      words = text.split(' ');
-                      _resetIndex();
-                      _forcePausePlayback();
-                    },
+                    
                   ),
 
                   //Wpm Slider
