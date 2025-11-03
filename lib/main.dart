@@ -26,16 +26,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -45,43 +35,7 @@ class MyHomePage extends StatefulWidget {
 int _index = 0;
 
 class _MyHomePageState extends State<MyHomePage> {
-  var words = [
-    "Never",
-    "gonna",
-    "give",
-    "you",
-    "up,",
-    "never",
-    "gonna",
-    "let",
-    "you",
-    "down,",
-    "never",
-    "gonna",
-    "run",
-    "around",
-    "and",
-    "desert",
-    "you.",
-    "Never",
-    "gonna",
-    "make",
-    "you",
-    "cry,",
-    "never",
-    "gonna",
-    "say",
-    "goodbye,",
-    "never",
-    "gonna",
-    "tell",
-    "a",
-    "lie",
-    "and",
-    "hurt",
-    "you.",
-  ];
-
+  var words = [];
   int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
@@ -165,10 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
 
                   //Wpm Slider
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 64),
                   Text(
                     'Speed: $_wpm WPM',
                     style: const TextStyle(fontSize: 18),
@@ -193,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
 
                   //Play/Pause Button
-                  const SizedBox(height: 64),
+                  const SizedBox(height: 24),
                   FloatingActionButton.extended(
                     heroTag: "play_pause",
                     onPressed: _toggleTimer,
@@ -246,6 +199,14 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pop(context);
   }
 
+  List<String> _tokenize(String text) {
+    return text
+        .replaceAll(RegExp(r'\r\n?'), '\n')
+        .split(RegExp(r'\s+')) // spaces, tabs, newlines
+        .where((s) => s.isNotEmpty)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,24 +215,50 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text('Settings'),
       ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter text',
-              ),
-              onChanged: (text) {
-                //Setting the display text arrray into the input text
-                inputWords = text.split(' ');
-              },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextField(
+                  minLines: 4,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    labelText: 'Paste or type your text',
+                    hintText: 'Enter text',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onChanged: (text) {
+                    //Setting the display text arrray into the input text
+                    inputWords = _tokenize(text);
+                  },
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton.icon(
+                    onPressed: _submitWords,
+                    icon: const Icon(Icons.check),
+                    label: const Text('Submit'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            FloatingActionButton(
-              onPressed: _submitWords,
-              tooltip: "Submit",
-              child: const Icon(Icons.air),
-            ),
-          ],
+          ),
         ),
       ),
     );
