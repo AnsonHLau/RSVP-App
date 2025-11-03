@@ -36,7 +36,7 @@ int _index = 0;
 
 class _MyHomePageState extends State<MyHomePage> {
   var words = [];
-  int _wpm = 240;
+  int _wpm = 250;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
