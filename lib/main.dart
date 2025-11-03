@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'RSVP Reader',
       theme: ThemeData(
         // This is the theme of your application.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 20, 80, 220)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 20, 80, 220),
+        ),
       ),
       home: const MyHomePage(title: 'RSVP Reader'),
     );
@@ -50,13 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
     "never", "gonna", "tell", "a", "lie", "and", "hurt", "you."
   ];
   int _index = 0;
-  final int _wpm = 240;
+  int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
   void _incrementIndex() {
     setState(() {
-      _index = (_index < words.length-1) ? _index + 1 : _index;
+      _index = (_index < words.length - 1) ? _index + 1 : _index;
     });
   }
 
@@ -66,13 +68,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer.periodic(_speed, (timer) {_incrementIndex();});
+    _timer = Timer.periodic(_speed, (timer) {
+      _incrementIndex();
+    });
     setState(() {});
   }
 
   void _stopTimer() {
     _timer?.cancel();
-    setState(() {}); 
+    setState(() {});
   }
 
   void _toggleTimer() {
@@ -88,11 +92,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _index = 0;
     });
   }
-  
 
-  void _forcePausePlayback(){
-    _stopTimer(); 
+  void _forcePausePlayback() {
+    _stopTimer();
+  }
 
+  void _updateWpm(int newWpm) {
+    setState(() {
+      _wpm = newWpm.clamp(100, 800);
+    });
+    if (_isRunning) {
+      _startTimer();
+    }
   }
 
   @override
@@ -101,15 +112,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      
-
       body: Stack(
         children: [
           // Main content
@@ -120,24 +129,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   Text(
                     words[_index],
-                    style: const TextStyle(fontSize: 52, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 52,
+                      fontWeight: FontWeight.w600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Enter text',
-                     
                     ),
-                    onChanged: (text){
+                    onChanged: (text) {
                       //Setting the display text arrray into the input text
-                      words = text.split(' '); 
+                      words = text.split(' ');
                       _resetIndex();
                       _forcePausePlayback();
-                    
-                    } 
+                    },
                   ),
-              
+
+                  //Wpm Slider
+                  const SizedBox(height: 32),
+                  Text(
+                    'Speed: $_wpm WPM',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      tickMarkShape: SliderTickMarkShape.noTickMark,
+                      activeTickMarkColor: Colors.transparent,
+                      inactiveTickMarkColor: Colors.transparent,
+                    ),
+                    child: Slider.adaptive(
+                      min: 100,
+                      max: 800,
+                      divisions: 28, // keeps discrete steps
+                      value: _wpm.toDouble(),
+                      label: '$_wpm WPM',
+                      onChanged: (v) => _updateWpm(v.round()),
+                    ),
+                  ),
+
                   //Play/Pause Button
                   const SizedBox(height: 64),
                   FloatingActionButton.extended(
@@ -152,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-          // Settings button 
+          // Settings button
           Positioned(
             left: 16,
             bottom: 16,
@@ -192,9 +224,7 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Settings'),
       ),
-      body: const Center(
-        child: Text('Settings go here'),
-      ),
+      body: const Center(child: Text('Settings go here')),
     );
   }
 }
