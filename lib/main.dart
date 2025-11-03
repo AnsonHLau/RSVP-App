@@ -81,14 +81,14 @@ class _MyHomePageState extends State<MyHomePage> {
     "hurt",
     "you.",
   ];
-  
+
   int _wpm = 240;
   Timer? _timer;
   bool get _isRunning => _timer?.isActive == true;
 
   void _incrementIndex() {
     setState(() {
-      _index = (_index < readingWords.length-1) ? _index + 1 : _index;
+      _index = (_index < readingWords.length - 1) ? _index + 1 : _index;
     });
   }
 
@@ -173,19 +173,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     'Speed: $_wpm WPM',
                     style: const TextStyle(fontSize: 18),
                   ),
-                  SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      tickMarkShape: SliderTickMarkShape.noTickMark,
-                      activeTickMarkColor: Colors.transparent,
-                      inactiveTickMarkColor: Colors.transparent,
-                    ),
-                    child: Slider.adaptive(
-                      min: 100,
-                      max: 800,
-                      divisions: 28, // keeps discrete steps
-                      value: _wpm.toDouble(),
-                      label: '$_wpm WPM',
-                      onChanged: (v) => _updateWpm(v.round()),
+                  SizedBox(
+                    width: 500,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        tickMarkShape: SliderTickMarkShape.noTickMark,
+                        activeTickMarkColor: Colors.transparent,
+                        inactiveTickMarkColor: Colors.transparent,
+                      ),
+                      child: Slider(
+                        min: 100,
+                        max: 800,
+                        divisions: 28, // keeps discrete steps
+                        value: _wpm.toDouble(),
+                        label: '$_wpm WPM',
+                        onChanged: (v) => _updateWpm(v.round()),
+                      ),
                     ),
                   ),
 
@@ -236,11 +239,9 @@ class _MyHomePageState extends State<MyHomePage> {
 var inputWords = [""];
 var readingWords = [""];
 
-class _SettingsPageState extends State<SettingsPage>{
-
-
-  void _submitWords(){
-    readingWords = inputWords; 
+class _SettingsPageState extends State<SettingsPage> {
+  void _submitWords() {
+    readingWords = inputWords;
     _index = 0;
     Navigator.pop(context);
   }
