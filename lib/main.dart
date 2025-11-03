@@ -165,13 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter text',
-                    ),
-                    
-                  ),
+                  
 
                   //Wpm Slider
                   const SizedBox(height: 32),
@@ -248,6 +242,7 @@ class _SettingsPageState extends State<SettingsPage>{
   void _submitWords(){
     readingWords = inputWords; 
     _index = 0;
+    Navigator.pop(context);
   }
 
   @override
