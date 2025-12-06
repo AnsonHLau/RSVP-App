@@ -10,12 +10,13 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   String _text = '';
+  bool _pauseSentence = false;
 
   // Splits input text into words
   List<String> _tokenize(String text) {
     return text
-        // spaces, tabs, newlines
-        .replaceAll(RegExp(r'\r\n?'), '\n')
+    // spaces, tabs, newlines
+    .replaceAll(RegExp(r'\r\n?'), '\n')
         .split(RegExp(r'\s+'))
         .where((s) => s.isNotEmpty)
         .toList();
@@ -24,7 +25,10 @@ class _SettingsPageState extends State<SettingsPage> {
   // Submit words and return to home
   void _submitWords() {
     final tokens = _tokenize(_text);
-    Navigator.pop(context, tokens);
+    Navigator.pop(context, {
+      'tokens': tokens,
+      'pauseSentence': _pauseSentence,
+    });
   }
 
   @override
@@ -54,6 +58,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onChanged: (text) => _text = text,
+                ),
+                const SizedBox(height: 12),
+                SwitchListTile(
+                  title: const Text('Punctuation Awareness'),
+                  subtitle: const Text('Pause a little after each sentence.'),
+                  value: _pauseSentence,
+                  onChanged: (value) {
+                    setState(() => _pauseSentence = value);
+                  },
                 ),
                 const SizedBox(height: 12),
                 Align(

@@ -4,6 +4,7 @@ import 'settings.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -16,17 +17,37 @@ class _MyHomePageState extends State<MyHomePage> {
   int _index = 0;
   int _wpm = 250;
   Timer? _timer;
+  bool _pauseSentence = false;
 
   bool get _isRunning => _timer?.isActive == true;
+
   Duration get _speed => Duration(milliseconds: (60000 / _wpm).round());
 
   // Move to next word
   void _incrementIndex() {
     if (readingWords.isEmpty) return;
-    setState(() {
-      _index = (_index < readingWords.length - 1) ? _index + 1 : _index;
-    });
+    final currentWord = readingWords[_index];
+    void advance() {
+      setState(() {
+        if (_index < readingWords.length - 1) {
+          _index++;
+        }
+      });
+    }
+
+    final endsSentence = RegExp(r'[.!?]$').hasMatch(currentWord);
+    if (_pauseSentence && endsSentence && _index < readingWords.length - 1) {
+      _timer?.cancel(); // stop timer for delay
+      const extraPause = Duration(milliseconds: 100);
+      Timer(extraPause, () {
+        advance();
+        _startTimer();
+      });
+      return;
+    }
+    advance();
   }
+
 
   void _startTimer() {
     _timer?.cancel();
@@ -58,14 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _openSettings() async {
     _stopTimer(); // Pause reader
-    final result = await Navigator.push<List<String>>(
+    final result = await Navigator.push<Map<String, dynamic>>(
       context,
       MaterialPageRoute(builder: (_) => const SettingsPage()),
     );
 
-    if (result != null && result.isNotEmpty) {
+    if (result != null) {
       setState(() {
-        readingWords = result;
+        readingWords = (result['tokens'] as List<String>? ?? []).toList();
+        _pauseSentence = result['pauseSentence'] as bool? ?? false;
         _index = 0;
       });
     }
@@ -79,7 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         title: Text(widget.title),
       ),
       body: Stack(
@@ -116,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Slider(
                         min: 100,
                         max: 800,
-                        divisions: 28, // Each division is 25WPM
+                        divisions: 28,
+                        // Each division is 25WPM
                         value: _wpm.toDouble(),
                         label: '$_wpm WPM',
                         onChanged: (v) => _updateWpm(v.round()),
