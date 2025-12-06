@@ -69,6 +69,18 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FilledButton.icon(
+                      //onPressed: _pickFile,
+                      onPressed: () {  }, // PLACEHOLDER
+                      icon: const Icon(Icons.upload_file),
+                      label: const Text('Import from file'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _controller,
                   minLines: 4,
@@ -91,20 +103,23 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() => _pauseSentence = value);
                   },
                 ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton.icon(
+                const SizedBox(height: 25),
+                Center(
+                  child: FilledButton(
                     onPressed: _submitWords,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Submit'),
                     style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
