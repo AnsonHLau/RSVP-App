@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 /* Settings Page */
@@ -53,6 +55,42 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  // File input
+  Future<void> _pickFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['txt', 'md'],
+        withData: true, // allows web importing
+      );
+
+      if (result == null) return;
+      final file = result.files.single;
+      String contents;
+
+      if (file.bytes != null) {
+        // WEB or platforms where no path is provided
+        contents = String.fromCharCodes(file.bytes!);
+      } else if (file.path != null) {
+        // Desktop / mobile (real file path)
+        contents = await File(file.path!).readAsString();
+      } else {
+        throw Exception("Unsupported file source");
+      }
+
+      setState(() {
+        _controller.text = contents;
+        _text = contents;
+      });
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to read file: $e')),
+      );
+    }
+  }
+
+  // Widgets and UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,8 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FilledButton.icon(
-                      //onPressed: _pickFile,
-                      onPressed: () {  }, // PLACEHOLDER
+                      onPressed: _pickFile,
                       icon: const Icon(Icons.upload_file),
                       label: const Text('Import from file'),
                     ),
