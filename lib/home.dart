@@ -48,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
     advance();
   }
 
-
   void _startTimer() {
     _timer?.cancel();
     if (readingWords.isEmpty) return;
@@ -79,9 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _openSettings() async {
     _stopTimer(); // Pause reader
+    final initialText = (readingWords.length == 1 && readingWords.first == "OpenSettingsToAddWords") ? '' : readingWords.join(' ');
     final result = await Navigator.push<Map<String, dynamic>>(
       context,
-      MaterialPageRoute(builder: (_) => const SettingsPage()),
+      MaterialPageRoute(
+        builder: (_) => SettingsPage(
+          initialText: initialText,
+          initialPauseSentence: _pauseSentence,
+        ),
+      ),
     );
 
     if (result != null) {
@@ -101,10 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
       body: Stack(

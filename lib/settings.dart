@@ -2,21 +2,43 @@ import 'package:flutter/material.dart';
 
 /* Settings Page */
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({
+    super.key,
+    required this.initialText,
+    required this.initialPauseSentence,
+  });
+
+  final String initialText;
+  final bool initialPauseSentence;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _text = '';
-  bool _pauseSentence = false;
+  late String _text;
+  late bool _pauseSentence;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _text = widget.initialText;
+    _pauseSentence = widget.initialPauseSentence;
+    _controller = TextEditingController(text: _text);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   // Splits input text into words
   List<String> _tokenize(String text) {
     return text
     // spaces, tabs, newlines
-    .replaceAll(RegExp(r'\r\n?'), '\n')
+        .replaceAll(RegExp(r'\r\n?'), '\n')
         .split(RegExp(r'\s+'))
         .where((s) => s.isNotEmpty)
         .toList();
@@ -24,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // Submit words and return to home
   void _submitWords() {
-    final tokens = _tokenize(_text);
+    final tokens = _tokenize(_controller.text);
     Navigator.pop(context, {
       'tokens': tokens,
       'pauseSentence': _pauseSentence,
@@ -48,6 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextField(
+                  controller: _controller,
                   minLines: 4,
                   maxLines: 10,
                   decoration: InputDecoration(
