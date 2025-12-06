@@ -5,10 +5,12 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({
     super.key,
     required this.initialText,
+    required this.initialFontSize,
     required this.initialPauseSentence,
   });
 
   final String initialText;
+  final double initialFontSize;
   final bool initialPauseSentence;
 
   @override
@@ -17,6 +19,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late String _text;
+  late double _fontSize;
   late bool _pauseSentence;
   late TextEditingController _controller;
 
@@ -24,6 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     _text = widget.initialText;
+    _fontSize = widget.initialFontSize;
     _pauseSentence = widget.initialPauseSentence;
     _controller = TextEditingController(text: _text);
   }
@@ -49,6 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final tokens = _tokenize(_controller.text);
     Navigator.pop(context, {
       'tokens': tokens,
+      'fontSize': _fontSize,
       'pauseSentence': _pauseSentence,
     });
   }
@@ -80,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                
                 TextField(
                   controller: _controller,
                   minLines: 4,
@@ -93,6 +98,21 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onChanged: (text) => _text = text,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Font Size: $_fontSize',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                Slider(
+                  min: 20,
+                  max: 120,
+                  divisions: 20,
+                  value: _fontSize,
+                  label: 'Font Size: $_fontSize',
+                  onChanged: (value) {
+                    setState(() => _fontSize = value);
+                  },
                 ),
                 const SizedBox(height: 12),
                 SwitchListTile(
