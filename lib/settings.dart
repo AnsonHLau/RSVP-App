@@ -9,11 +9,15 @@ class SettingsPage extends StatefulWidget {
     required this.initialText,
     required this.initialFontSize,
     required this.initialPauseSentence,
+    //required this.initialDarkMode,
+    required this.themeNotifier,
   });
 
   final String initialText;
   final double initialFontSize;
   final bool initialPauseSentence;
+  //final bool initialDarkMode; 
+  final ValueNotifier<ThemeMode> themeNotifier; 
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -23,7 +27,9 @@ class _SettingsPageState extends State<SettingsPage> {
   late String _text;
   late double _fontSize;
   late bool _pauseSentence;
+  //late bool _darkMode;
   late TextEditingController _controller;
+  late  final ValueNotifier<ThemeMode> _themeNotifier; 
 
   @override
   void initState() {
@@ -31,6 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
     _text = widget.initialText;
     _fontSize = widget.initialFontSize;
     _pauseSentence = widget.initialPauseSentence;
+   // _darkMode = widget.initialDarkMode; 
+    _themeNotifier = widget.themeNotifier; 
     _controller = TextEditingController(text: _text);
   }
 
@@ -57,6 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
       'tokens': tokens,
       'fontSize': _fontSize,
       'pauseSentence': _pauseSentence,
+      //'darkMode' : _darkMode,
     });
   }
 
@@ -251,6 +260,26 @@ class _SettingsPageState extends State<SettingsPage> {
                         value: _pauseSentence,
                         onChanged: (value) {
                           setState(() => _pauseSentence = value);
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: SwitchListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        title: const Text('Dark Mode'),
+                        value: _themeNotifier.value == ThemeMode.dark,
+                        onChanged: (isDark) {
+                          setState(() => _themeNotifier.value = isDark ? ThemeMode.dark : ThemeMode.light);  
                         },
                       ),
                     ),

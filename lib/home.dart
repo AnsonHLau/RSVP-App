@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'settings.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, 
+    required this.themeNotifier});
 
+  
   final String title;
+  final ValueNotifier<ThemeMode> themeNotifier; 
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -19,6 +22,14 @@ class _MyHomePageState extends State<MyHomePage> {
   double _fontSize = 55;
   Timer? _timer;
   bool _pauseSentence = false;
+  late ValueNotifier<ThemeMode> _themeNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeNotifier = widget.themeNotifier;
+  }
+  
 
   bool get _isRunning => _timer?.isActive == true;
 
@@ -87,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           initialText: initialText,
           initialFontSize: _fontSize,
           initialPauseSentence: _pauseSentence,
+          themeNotifier: _themeNotifier,
         ),
       ),
     );
