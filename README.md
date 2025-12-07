@@ -1,16 +1,30 @@
-# rsvp_app
+# RSVP Reader
+An RSVP Reader is a speed-reading tool that displays one word at a time (Rapid Serial Visual Presentation).  
 
-A new Flutter project.
+## Features
 
-## Getting Started
+- **Text input**: Paste or type text directly. Import `.txt` or `.md` files using a file picker 
+- **Reading Controls**: Adjustable words per minute & font size
+- **Pause at punctuation**: Option to briefly pause at the end of sentences
+- **Playback**: Play / pause reading. Reset back to the first word
 
-This project is a starting point for a Flutter application.
+## Usage
 
-A few resources to get you started if this is your first Flutter project:
+1. Open the app
+2. Press the Settings button in the bottom-left corner
+3. Paste your text directly or import from a file
+4. Adjust your reading preferences (font size, pause at punctuation, etc)
+5. Tap Submit to confirm changes and return to home screen
+6. Start reading by pressing Play/Pause button
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is a Flutter application which requires:
+
+- [Flutter](https://flutter.dev/docs/get-started/install) installed  
+- A device or emulator set up (mobile, desktop, or web)
+
+### Install dependencies
+
+```bash
+flutter pub get

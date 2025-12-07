@@ -16,6 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> readingWords = const ["OpenSettingsToAddWords"];
   int _index = 0;
   int _wpm = 250;
+  double _fontSize = 55;
   Timer? _timer;
   bool _pauseSentence = false;
 
@@ -84,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(
         builder: (_) => SettingsPage(
           initialText: initialText,
+          initialFontSize: _fontSize,
           initialPauseSentence: _pauseSentence,
         ),
       ),
@@ -93,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         readingWords = (result['tokens'] as List<String>? ?? []).toList();
         _pauseSentence = result['pauseSentence'] as bool? ?? false;
+        _fontSize = result['fontSize'] as double? ?? _fontSize;
         _index = 0;
       });
     }
@@ -119,8 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Displayed Word
                   Text(
                     currentWord,
-                    style: const TextStyle(
-                      fontSize: 52,
+                    style: TextStyle(
+                      fontSize: _fontSize,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
