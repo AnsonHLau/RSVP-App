@@ -253,10 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        title: const Text('Pause at punctuation'),
-                        subtitle: const Text(
-                          'Add a short pause at the end of each sentence.',
-                        ),
+                        title: const Text('Pause at End of Sentence'),
                         value: _pauseSentence,
                         onChanged: (value) {
                           setState(() => _pauseSentence = value);
@@ -264,7 +261,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 8),
 
                     Container(
                       decoration: BoxDecoration(
