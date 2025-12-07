@@ -19,12 +19,7 @@ An RSVP Reader is a speed-reading tool that displays one word at a time (Rapid S
 
 ## Installation
 
-This project is a Flutter application which requires:
-
-- [Flutter](https://flutter.dev/docs/get-started/install) installed  
-- A device or emulator set up (mobile, desktop, or web)
-
-### Install dependencies
-
-```bash
-flutter pub get
+1. Go to the Releases page
+2. Download the latest ZIP 
+3. Extract it
+4. Run rsvp_app.exe
